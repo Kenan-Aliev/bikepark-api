@@ -79,16 +79,16 @@ router.post('/activation', async (req, res) => {
                     if (err) {
                         return res.status(500).json({message: messages.activation.hashError})
                     } else {
-                        const user = new User({email, username, phone, password: hashPassword}).save()
-                        user.then(response => res.status(500).json({
-                                message: messages.activation.RegistrationSuccess,
-                                response
-                            })
-                        )
-                        user.catch(err => res.status(500).json({
-                            message: messages.activation.RegistrationFailed,
-                            err
-                        }))
+                        new User({email, username, phone, password: hashPassword}).save()
+                            .then(response => res.status(200).json({
+                                    message: messages.activation.RegistrationSuccess,
+                                    response
+                                })
+                            )
+                            .catch(err => res.status(500).json({
+                                message: messages.activation.RegistrationFailed,
+                                err
+                            }))
                     }
                 })
 
