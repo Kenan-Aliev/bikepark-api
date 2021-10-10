@@ -1,14 +1,15 @@
 class Errors {
-    constructor(type, message) {
-        switch (type) {
-            case 'MONGO_ERROR':
-                this.connectionError(message)
-        }
+    static asyncError(message) {
+        return new Promise((resolve, reject) => {
+                reject(message)
+            }
+        )
     }
 
-    connectionError(message) {
+    static userExists(message){
         throw new Error(message)
     }
+
 }
 
 module.exports = Errors

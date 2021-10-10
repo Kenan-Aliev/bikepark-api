@@ -10,22 +10,28 @@ const dbUrl = process.env.DB_URL
 
 
 server.use(express.json())
+
+
 server.use('/auth', authRoutes)
 
-const start = async () => {
-    try {
-        await mongoose.connect(dbUrl, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
+
+const start = () => {
+    mongoose.connect(dbUrl, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        }, (error) => {
+            if (error) {
+                console.log(error)
+                error = Errors.asyncError('Ошибка подключения к базе данных')
+                error.catch(error => console.log(error))
+            } else {
+                server.listen(PORT, () => {
+                        console.log(`Сервер запущен на порту ${PORT}`)
+                    }
+                )
             }
-        )
-        server.listen(PORT, () => {
-            console.log(`Сервер запущен на порту ${PORT}`)
-        })
-    } catch (error) {
-        error = new Errors('MONGO_ERROR', 'Ошибка подключения к базе данных')
-        console.log(error.message)
-    }
+        }
+    )
 }
 
 start()
