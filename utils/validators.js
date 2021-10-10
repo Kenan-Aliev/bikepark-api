@@ -28,10 +28,7 @@ exports.registerValidators = [
         }
     }),
 
-    body('phone').isString().withMessage('Номер должен быть в виде строки').isLength({
-        min: 18,
-        max: 18
-    }).withMessage('Длина должна быть 18 символов').custom((value, {req}) => {
+    body('phone').isString().withMessage('Номер должен быть в виде строки').custom((value, {req}) => {
         const rgx = /^\+\([0-9]{3}\)-[0-9]{3}-[0-9]{3}-[0-9]{3}$/
         if (rgx.test(value)) {
             return true
