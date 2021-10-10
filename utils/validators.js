@@ -28,7 +28,10 @@ exports.registerValidators = [
         }
     }),
 
-    body('phone','Номер должен быть в виде строки').isString().custom((value, {req}) => {
+    body('phone').isString().withMessage('Номер должен быть в виде строки').isLength({
+        min: 18,
+        max: 18
+    }).withMessage('Длина должна быть 18 символов').custom((value, {req}) => {
         const rgx = /^\+\([0-9]{3}\)-[0-9]{3}-[0-9]{3}-[0-9]{3}$/
         if (rgx.test(value)) {
             return true
@@ -37,6 +40,6 @@ exports.registerValidators = [
         }
     }),
 
-    body('password', 'Пароль должен быть минимум 6 символов')
-        .isLength({min: 6, max: 56}).isAlphanumeric().trim()
+    body('password')
+        .isLength({min: 6, max: 56}).withMessage('Пароль должен быть минимум 6 символов').isAlphanumeric().trim()
 ]

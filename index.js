@@ -2,7 +2,7 @@ const express = require('express')
 const server = express()
 const mongoose = require("mongoose")
 require('dotenv').config()
-const Errors = require("./errors/index")
+const messages = require("./messages/index")
 const authRoutes = require('./routes/auth')
 
 const PORT = process.env.PORT || 8080
@@ -21,12 +21,10 @@ const start = () => {
             useUnifiedTopology: true
         }, (error) => {
             if (error) {
-                console.log(error)
-                error = Errors.asyncError('Ошибка подключения к базе данных')
-                error.catch(error => console.log(error))
+                console.log(messages.mongoErrors.connectionError)
             } else {
                 server.listen(PORT, () => {
-                        console.log(`Сервер запущен на порту ${PORT}`)
+                        console.log(`${messages.server.started} ${PORT}`)
                     }
                 )
             }
