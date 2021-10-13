@@ -29,11 +29,11 @@ exports.registerValidators = [
     }),
 
     body('phone').isString().withMessage('Номер должен быть в виде строки').custom((value, {req}) => {
-        const rgx = /^\+\([0-9]{3}\)-[0-9]{3}-[0-9]{3}-[0-9]{3}$/
+        const rgx = /^\+996(\d{9})$/
         if (rgx.test(value)) {
             return true
         } else {
-            throw new Error('Введите правильно номер. Пример: +(996)-553-484-837')
+            throw new Error('Введите правильно номер. Пример: +996553484837')
         }
     }),
 
