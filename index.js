@@ -24,7 +24,7 @@ const start = () => {
             useUnifiedTopology: true
         }, (error) => {
             if (error) {
-                console.log(messages.mongoErrors.connectionError)
+                console.log(messages.server.mongoErrors.connectionError)
             } else {
                 server.listen(PORT, () => {
                         console.log(`${messages.server.started} ${PORT}`)
