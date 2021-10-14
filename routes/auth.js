@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 const {validationResult} = require('express-validator')
-const User = require('../models/usersModel')
+const User = require('../models/user')
 const regEmail = require('../emails/registration')
 const messages = require('../messages/index')
 const {registerValidators} = require('../utils/validators')
@@ -69,9 +69,9 @@ router.post('/activation', async (req, res) => {
         jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
             if (err) {
                 if (err.message.includes('jwt expired')) {
-                    return res.status(500).json({message: messages.activation.tokenExpired})
+                    return res.status(400).json({message: messages.activation.tokenExpired})
                 } else {
-                    return res.status(500).json({message: messages.activation.wrongToken})
+                    return res.status(400).json({message: messages.token.wrongToken})
                 }
             } else {
                 const {email, username, phone, password} = decoded
@@ -113,7 +113,8 @@ router.post('/login', async (req, res) => {
             } else {
                 const token = jwt.sign({
                     id: candidate.__id,
-                    email: candidate.email
+                    email: candidate.email,
+                    role: candidate.role
                 }, process.env.SECRET_KEY, {expiresIn: '24h'})
                 return res.status(200).json({
                     message: messages.login.successLogin,
