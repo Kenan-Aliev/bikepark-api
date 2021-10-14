@@ -2,19 +2,20 @@ const {Router} = require('express')
 const router = Router()
 const Bike = require('../models/bike')
 const adminMiddleware = require('../middlewares/admin')
+const messages = require('../messages/index')
 
 router.post('/add', adminMiddleware, async (req, res) => {
     const {name, brand, img, price} = req.body
     try {
         const candidate = await Bike.findOne({name: name.toLowerCase().trim()})
         if (candidate) {
-            return res.status(400).json({message: "Велосипед с таким названием уже существует"})
+            return res.status(400).json({message: messages.bike.admin.bikeExists})
         }
         const newBike = new Bike({name: name.toLowerCase().trim(), brand: brand.trim(), img, price})
         await newBike.save()
-        return res.status(200).json({message: "Вы успешно добавили новый товар"})
+        return res.status(200).json({message: messages.bike.admin.bikeExists})
     } catch (error) {
-        return res.status(500).json({message: 'Что-то пошло не так', error})
+        return res.status(500).json({message: messages.server.error, error})
     }
 
 })
@@ -23,7 +24,7 @@ router.post('/add', adminMiddleware, async (req, res) => {
 router.get('/getAll', (req, res) => {
     Bike.find({}, (err, result) => {
         if (err) {
-            return res.status(500).json({message: 'Что-то пошло не так', err})
+            return res.status(500).json({message: messages.server.error, err})
         }
         result = result.map((bike) => {
             if (bike.name.includes(' ')) {

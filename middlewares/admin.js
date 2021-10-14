@@ -6,9 +6,9 @@ module.exports = function (req, res, next) {
     jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {
             if (error) {
                 if (error.message.includes('jwt expired')) {
-                    return res.status(400).json({message: messages.token.tokenExpired})
+                    return res.status(400).json({message: messages.auth.token.tokenExpired})
                 } else {
-                    return res.status(400).json({message: messages.token.wrongToken})
+                    return res.status(400).json({message: messages.auth.token.wrongToken})
                 }
             } else {
                 if (decoded.role === 'admin') {

@@ -1,14 +1,15 @@
 const {body} = require('express-validator')
 const User = require('../models/user')
+const messages = require('../messages/index')
 
 exports.registerValidators = [
 
-    body('email', 'Введите корректный email')
-        .isEmail().custom(async (value, {req}) => {
+    body('email')
+        .isEmail().withMessage(messages.auth.registration.validation.correctEmail).custom(async (value, {req}) => {
         try {
             const user = await User.findOne({email: value})
             if (user) {
-                return Promise.reject('Такой email уже занят')
+                return Promise.reject(messages.auth.registration.validation.emailExists)
             }
         } catch (e) {
             console.log(e)
@@ -16,27 +17,33 @@ exports.registerValidators = [
     })
         .normalizeEmail(),
 
-    body('username', 'Имя должно быть больше 3 и меньше 15 символов')
-        .isLength({min: 3, max: 15}).isAlphanumeric().trim().custom(async (value, {req}) => {
+    body('username')
+        .isLength({
+            min: 3,
+            max: 15
+        }).withMessage(messages.auth.registration.validation.usernameLength).isAlphanumeric().trim().custom(async (value, {req}) => {
         try {
             const user = await User.findOne({username: value})
             if (user) {
-                return Promise.reject("Такой никнейм уже занят")
+                return Promise.reject(messages.auth.registration.validation.usernameExists)
             }
         } catch (error) {
             console.log(error)
         }
     }),
 
-    body('phone').isString().withMessage('Номер должен быть в виде строки').custom((value, {req}) => {
+    body('phone').isString().withMessage(messages.auth.registration.validation.phoneIsString).custom((value, {req}) => {
         const rgx = /^\+996(\d{9})$/
         if (rgx.test(value)) {
             return true
         } else {
-            throw new Error('Введите правильно номер. Пример: +996553484837')
+            throw new Error(messages.auth.registration.validation.inputCorrectPhone)
         }
     }),
 
     body('password')
-        .isLength({min: 6, max: 56}).withMessage('Пароль должен быть минимум 6 символов').isAlphanumeric().trim()
+        .isLength({
+            min: 6,
+            max: 56
+        }).withMessage(messages.auth.registration.validation.passwordLength).isAlphanumeric().trim()
 ]

@@ -36,22 +36,22 @@ router.post('/registration',
             const {email, username, phone, password} = req.body
             const emailExists = await User.findOne({email})
             if (emailExists) {
-                return res.status(400).json({message: messages.registration.emailExists})
+                return res.status(400).json({message: messages.auth.registration.emailExists})
             }
             const usernameExists = await User.findOne({username})
             if (usernameExists) {
-                return res.status(400).json({message: messages.registration.usernameExists})
+                return res.status(400).json({message: messages.auth.registration.usernameExists})
             }
             const token = jwt.sign({email, username, phone, password}, process.env.SECRET_KEY, {expiresIn: '3m'})
             transporter.sendMail(regEmail(email, token), (err, info) => {
                 if (err) {
                     return res.status(500).send({
-                        message: messages.registration.sendMailError,
+                        message: messages.auth.registration.sendMailError,
                         err: err.message
                     })
                 } else {
                     return res.status(200).json({
-                        message: messages.registration.sendMailSuccess,
+                        message: messages.auth.registration.sendMailSuccess,
                         info
                     })
 
@@ -69,24 +69,24 @@ router.post('/activation', async (req, res) => {
         jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
             if (err) {
                 if (err.message.includes('jwt expired')) {
-                    return res.status(400).json({message: messages.activation.tokenExpired})
+                    return res.status(400).json({message: messages.auth.activation.tokenExpired})
                 } else {
-                    return res.status(400).json({message: messages.token.wrongToken})
+                    return res.status(400).json({message: messages.auth.token.wrongToken})
                 }
             } else {
                 const {email, username, phone, password} = decoded
                 bcrypt.hash(password, 8, (err, hashPassword) => {
                     if (err) {
-                        return res.status(500).json({message: messages.activation.hashError})
+                        return res.status(500).json({message: messages.auth.activation.hashError})
                     } else {
                         new User({email, username, phone, password: hashPassword}).save()
                             .then(response => res.status(200).json({
-                                    message: messages.activation.RegistrationSuccess,
+                                    message: messages.auth.activation.RegistrationSuccess,
                                     response
                                 })
                             )
                             .catch(err => res.status(500).json({
-                                message: messages.activation.RegistrationFailed,
+                                message: messages.auth.activation.RegistrationFailed,
                                 err
                             }))
                     }
@@ -103,13 +103,13 @@ router.post('/login', async (req, res) => {
         const {email, password} = req.body
         const candidate = await User.findOne({email})
         if (!candidate) {
-            return res.status(400).json({message: messages.login.emailNotExists})
+            return res.status(400).json({message: messages.auth.login.emailNotExists})
         }
         bcrypt.compare(password, candidate.password, (err, result) => {
             if (err) {
-                return res.status(500).json({message: messages.login.compareError, err})
+                return res.status(500).json({message: messages.auth.login.compareError, err})
             } else if (!result) {
-                return res.status(400).json({message: messages.login.wrongPassword})
+                return res.status(400).json({message: messages.auth.login.wrongPassword})
             } else {
                 const token = jwt.sign({
                     id: candidate.__id,
@@ -117,7 +117,7 @@ router.post('/login', async (req, res) => {
                     role: candidate.role
                 }, process.env.SECRET_KEY, {expiresIn: '24h'})
                 return res.status(200).json({
-                    message: messages.login.successLogin,
+                    message: messages.auth.login.successLogin,
                     id: candidate._id,
                     email,
                     token
