@@ -13,7 +13,7 @@ router.post('/add', adminMiddleware, async (req, res) => {
         }
         const newBike = new Bike({name: name.toLowerCase().trim(), brand: brand.trim(), img, price})
         await newBike.save()
-        return res.status(200).json({message: messages.bike.admin.bikeExists})
+        return res.status(200).json({message: messages.bike.admin.successAdd})
     } catch (error) {
         return res.status(500).json({message: messages.server.error, error})
     }
