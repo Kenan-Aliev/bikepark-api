@@ -5,6 +5,7 @@ require('dotenv').config()
 const messages = require("./messages/index")
 const authRoutes = require('./routes/auth')
 const bikeRoutes = require('./routes/bike.js')
+const orderRoutes = require('./routes/order')
 const cors = require('cors')
 
 const PORT = process.env.PORT || 8080
@@ -16,6 +17,7 @@ server.use(cors())
 
 server.use('/auth', authRoutes)
 server.use('/bike', bikeRoutes)
+server.use('/order', orderRoutes)
 
 
 const start = () => {

@@ -79,7 +79,7 @@ router.post('/activation', async (req, res) => {
                     if (err) {
                         return res.status(500).json({message: messages.auth.activation.hashError})
                     } else {
-                        new User({email, username, phone, password: hashPassword}).save()
+                        new User({email, username, phone, orders: [], password: hashPassword}).save()
                             .then(response => res.status(200).json({
                                     message: messages.auth.activation.RegistrationSuccess,
                                     response
@@ -112,7 +112,7 @@ router.post('/login', async (req, res) => {
                 return res.status(400).json({message: messages.auth.login.wrongPassword})
             } else {
                 const token = jwt.sign({
-                    id: candidate.__id,
+                    id: candidate._id,
                     email: candidate.email,
                     role: candidate.role
                 }, process.env.SECRET_KEY, {expiresIn: '24h'})

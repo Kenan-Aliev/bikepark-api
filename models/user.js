@@ -18,6 +18,22 @@ const userSchema = new Schema({
         type: String,
         default: 'user',
     },
+    orders: [
+        {
+            bikes: [
+                {
+                    name: String,
+                    brand: String,
+                    bikeType: String,
+                    price: Number
+                }
+            ],
+            orderNumber: Number,
+            totalPrice: Number,
+            madeAt: Date,
+            expiresAt: Date
+        }
+    ],
     password: {
         type: String,
         required: true

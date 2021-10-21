@@ -8,12 +8,19 @@ const bikeSchema = new Schema({
         unique: true
     },
     img: {
-        type: String,
-        required: true
+        type: String
     },
     brand: {
         type: String,
         required: true
+    },
+    isRented: {
+        type: Boolean,
+        default: false
+    },
+    rentedAmount: {
+        type: Number,
+        default: 0
     },
     price: {
         type: Number,
