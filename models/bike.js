@@ -25,7 +25,11 @@ const bikeSchema = new Schema({
     price: {
         type: Number,
         required: true
-    }
+    },
+    color: String,
+    frameMaterial: String,
+    frameSize: Number,
+    wheelsSize: Number
 })
 
 module.exports = model('bikes', bikeSchema)
