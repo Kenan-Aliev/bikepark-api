@@ -20,6 +20,8 @@
     "mongoose": "^6.0.9",
     "nodemailer": "^6.6.5",
     "nodemon": "^2.0.13",
-    "random-key": "^0.3.2"
+    "random-key": "^0.3.2",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6"
   }
 }
