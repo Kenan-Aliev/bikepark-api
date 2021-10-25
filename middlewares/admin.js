@@ -18,7 +18,7 @@ module.exports = function (req, res, next) {
       if (decoded.role === "admin") {
         next();
       } else {
-        return res.status(400).json({ message: messages.bike.admin.noAccess });
+        return res.status(403).json({ message: messages.bike.admin.noAccess });
       }
     }
   });
