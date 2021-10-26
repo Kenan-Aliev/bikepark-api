@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const bodyParser = require('body-parser')
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 require("dotenv").config();
@@ -13,20 +14,20 @@ const PORT = process.env.PORT || 8080;
 const dbUrl = process.env.DB_URL;
 
 const options = {
-  definition: {
-    openapi: "3.0.3",
-    info: {
-      title: "BikePark API",
-      version: "1.0.0",
-      description: "Express BikePark API",
+    definition: {
+        openapi: "3.0.3",
+        info: {
+            title: "BikePark API",
+            version: "1.0.0",
+            description: "Express BikePark API",
+        },
+        servers: [
+            {
+                url: `http://localhost:${PORT}`,
+            },
+        ],
     },
-    servers: [
-      {
-        url: `http://localhost:${PORT}`,
-      },
-    ],
-  },
-  apis: ["./routes/*.js"]
+    apis: ["./routes/*.js"]
 };
 
 const specs = swaggerJsDoc(options);
@@ -34,31 +35,31 @@ const specs = swaggerJsDoc(options);
 const server = express();
 
 server.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
-server.use(express.json());
 server.use(cors());
-server.use(express.urlencoded({extended: true, limit: '5mb'}))
+server.use(bodyParser.json({limit: '50mb'}));
+server.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 server.use("/auth", authRoutes);
 server.use("/bike", bikeRoutes);
 server.use("/order", orderRoutes);
 
 const start = () => {
-  mongoose.connect(
-    dbUrl,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    },
-    (error) => {
-      if (error) {
-        console.log(messages.server.mongoErrors.connectionError);
-      } else {
-        server.listen(PORT, () => {
-          console.log(`${messages.server.started} ${PORT}`);
-        });
-      }
-    }
-  );
+    mongoose.connect(
+        dbUrl,
+        {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        },
+        (error) => {
+            if (error) {
+                console.log(messages.server.mongoErrors.connectionError);
+            } else {
+                server.listen(PORT, () => {
+                    console.log(`${messages.server.started} ${PORT}`);
+                });
+            }
+        }
+    );
 };
 
 start();
