@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, ObjectId } = require("mongoose");
 
 const userSchema = new Schema({
   email: {
@@ -23,9 +23,10 @@ const userSchema = new Schema({
     {
       bikes: [
         {
-          name: String,
-          brand: String,
-          bikeType: String,
+          bikeId: {
+            type: ObjectId,
+            ref: "bikes",
+          },
           price: Number,
         },
       ],
@@ -40,5 +41,11 @@ const userSchema = new Schema({
     required: true,
   },
 });
+
+userSchema.methods.getOrder = function (orderNumber) {
+  const orders = [...this.orders];
+  const idx = orders.findIndex((order) => order.orderNumber === +orderNumber);
+  return idx;
+};
 
 module.exports = model("users", userSchema);

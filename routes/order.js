@@ -6,10 +6,6 @@ const Bike = require("../models/bike.js");
 const rand = require("random-key");
 const messages = require("../messages/index");
 
-
-
-
-
 router.post("/new", userMiddleware, async (req, res) => {
   let { bikes, madeAt, expiresAt } = req.body;
   try {
@@ -72,7 +68,10 @@ router.post("/new", userMiddleware, async (req, res) => {
 
 router.get("/getUsersOrders", userMiddleware, async (req, res) => {
   try {
-    const user = await User.findOne({ _id: req.user.id });
+    const user = await User.findOne({ _id: req.user.id }).populate(
+      "orders.bikes.bikeId",
+      "name brand"
+    );
     const { orders } = user;
     return res.status(200).send({ userOrders: orders });
   } catch (error) {
@@ -110,13 +109,10 @@ router.delete("/cancel/:orderNumber", userMiddleware, async (req, res) => {
   const { orderNumber } = req.params;
   try {
     const user = await User.findOne({ _id: req.user.id });
-    const order = user.orders.find(
-      (order) => order.orderNumber === orderNumber
-    );
-    for (let i = 0; i < order.bikes.length; i++) {
-      const bikeName = order.bikes[i].name;
-      const regexp = new RegExp(`${bikeName}`, "i");
-      const bike = await Bike.findOne({ name: { $regex: regexp } });
+    const orderIdx = await user.getOrder(orderNumber);
+    for (let i = 0; i < user.orders[orderIdx].bikes.length; i++) {
+      const bikeId = user.orders[orderIdx].bikes[i].bikeId;
+      const bike = await Bike.findOne({ _id: bikeId });
       bike.isRented = false;
       await bike.save();
     }
