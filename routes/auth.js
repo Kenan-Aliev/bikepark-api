@@ -38,7 +38,7 @@ const router = Router();
  *          role:
  *            type: string
  *            default: user
- *          password: 
+ *          password:
  *            type: string
  *            min: 6
  *            max: 56
@@ -65,7 +65,7 @@ const router = Router();
  *                         items:
  *                              type: object
  *                              properties:
- *                                          _id: 
+ *                                          _id:
  *                                            type: string
  *                                            description: The auto-generated id by MongoDB
  *                                          name:
@@ -78,12 +78,12 @@ const router = Router();
  *                                            type: string
  */
 
-/** 
+/**
  * @swagger
  * tags:
  *   name: UserAuthorization
  *   description: Authorization managing API
-*/
+ */
 
 /**
  * @swagger
@@ -97,60 +97,60 @@ const router = Router();
  *           application/json:
  *            schema:
  *              type: object
- *              properties : 
+ *              properties :
  *                     email :
  *                        type: string
- *                     username: 
+ *                     username:
  *                        type: string
- *                     phone: 
+ *                     phone:
  *                        type: string
- *                     password: 
+ *                     password:
  *                        type: string
  *              required:
  *                     - email
  *                     - username
  *                     - phone
  *                     - password
- *              example: 
+ *              example:
  *                     {
  *                       email: "kenan1999@gmail.com",
  *                       username: "kenan",
  *                       phone: "+996553484837",
- *                       password: "k2vrrtz"  
+ *                       password: "k2vrrtz"
  *                     }
- *     responses: 
+ *     responses:
  *        422:
  *           description : Some User Schema validation error
- *           content: 
+ *           content:
  *            application/json:
  *              schema:
  *                     type: object
- *                     properties: 
- *                        message: 
+ *                     properties:
+ *                        message:
  *                          type: string
  *        500:
  *           description: Some server error
- *           content: 
+ *           content:
  *            application/json:
  *              schema:
  *                     type: object
- *                     properties: 
+ *                     properties:
  *                        message:
  *                          type: string
- * 
+ *
  *        200:
  *           description: Returns a message about confirming registration on user email
- *           content: 
+ *           content:
  *            application/json:
  *              schema:
  *                     type: object
- *                     properties: 
- *                        message: 
+ *                     properties:
+ *                        message:
  *                          type: string
- * 
- *                        
- *              
- * 
+ *
+ *
+ *
+ *
  */
 const transporter = nodemailer.createTransport(
   {
@@ -197,7 +197,6 @@ router.post("/registration", registerValidators, async (req, res) => {
   }
 });
 
-
 /**
  * @swagger
  * /auth/activation:
@@ -211,7 +210,7 @@ router.post("/registration", registerValidators, async (req, res) => {
  *            schema:
  *              type: object
  *              properties:
- *                token: 
+ *                token:
  *                  type: string
  *     responses:
  *        400:
@@ -241,8 +240,8 @@ router.post("/registration", registerValidators, async (req, res) => {
  *                properties:
  *                  message:
  *                    type: string
- * 
- *     
+ *
+ *
  */
 
 router.post("/activation", async (req, res) => {
@@ -292,8 +291,6 @@ router.post("/activation", async (req, res) => {
   });
 });
 
-
-
 /**
  * @swagger
  * /auth/login:
@@ -307,7 +304,7 @@ router.post("/activation", async (req, res) => {
  *            schema:
  *              type: object
  *              properties:
- *                email: 
+ *                email:
  *                  type: string
  *                password:
  *                  type: string
@@ -331,7 +328,7 @@ router.post("/activation", async (req, res) => {
  *                  message:
  *                    type: string
  *        200:
- *           description: Returns a success login message and user's some data 
+ *           description: Returns a success login message and user's some data
  *           content:
  *            application/json:
  *              schema:
@@ -345,10 +342,9 @@ router.post("/activation", async (req, res) => {
  *                    type: string
  *                  token:
  *                    type: string
- * 
- *     
+ *
+ *
  */
-
 
 router.post("/login", async (req, res) => {
   try {

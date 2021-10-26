@@ -25,7 +25,7 @@ const messages = require("../messages/index");
  *            type: string
  *          brand:
  *            type: string
- *          isRented: 
+ *          isRented:
  *            type: boolean
  *            default: false
  *          rentedAmount:
@@ -41,18 +41,15 @@ const messages = require("../messages/index");
  *            type: number
  *          wheelsSize:
  *            type: number
- *          
+ *
  */
 
-
-/** 
+/**
  * @swagger
  * tags:
  *   name: BikeRoutes
  *   description: Bike managing API
-*/
-
-
+ */
 
 /**
  * @swagger
@@ -74,21 +71,21 @@ const messages = require("../messages/index");
  *            schema:
  *              type: object
  *              properties:
- *                name: 
+ *                name:
  *                  type: string
- *                brand: 
+ *                brand:
  *                  type: string
- *                img: 
+ *                img:
  *                  type: string
- *                price: 
+ *                price:
  *                  type: number
- *                color: 
+ *                color:
  *                  type: string
- *                frameMaterial: 
+ *                frameMaterial:
  *                  type: string
- *                frameSize: 
+ *                frameSize:
  *                  type: number
- *                wheelsSize: 
+ *                wheelsSize:
  *                  type: number
  *     responses:
  *        400:
@@ -127,11 +124,9 @@ const messages = require("../messages/index");
  *                properties:
  *                  message:
  *                    type: string
- * 
- *     
+ *
+ *
  */
-
-
 
 router.post("/add", adminMiddleware, async (req, res) => {
   const {
@@ -166,8 +161,6 @@ router.post("/add", adminMiddleware, async (req, res) => {
   }
 });
 
-
-
 /**
  *@swagger
  * components:
@@ -189,7 +182,7 @@ router.post("/add", adminMiddleware, async (req, res) => {
  *            type: string
  *          brand:
  *            type: string
- *          isRented: 
+ *          isRented:
  *            type: boolean
  *            default: false
  *          rentedAmount:
@@ -205,18 +198,15 @@ router.post("/add", adminMiddleware, async (req, res) => {
  *            type: number
  *          wheelsSize:
  *            type: number
- *          
+ *
  */
 
-
-/** 
+/**
  * @swagger
  * tags:
  *   name: BikeRoutes
  *   description: Bike managing API
-*/
-
-
+ */
 
 /**
  * @swagger
@@ -245,12 +235,11 @@ router.post("/add", adminMiddleware, async (req, res) => {
  *                    type: array
  *                    items:
  *                        $ref: '#/components/schemas/Bike'
- *                    
- *                    
- * 
- *     
+ *
+ *
+ *
+ *
  */
-
 
 router.get("/getAll", (req, res) => {
   Bike.find({}, (err, result) => {

@@ -36,6 +36,7 @@ const server = express();
 server.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 server.use(express.json());
 server.use(cors());
+server.use(express.urlencoded({extended: true, limit: '5mb'}))
 
 server.use("/auth", authRoutes);
 server.use("/bike", bikeRoutes);
