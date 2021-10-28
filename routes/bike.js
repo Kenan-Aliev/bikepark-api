@@ -161,52 +161,8 @@ router.post("/add", adminMiddleware, async (req, res) => {
   }
 });
 
-/**
- *@swagger
- * components:
- *    schemas:
- *      Bike:
- *       type: object
- *       required:
- *          - name
- *          - brand
- *          - price
- *       properties:
- *          _id:
- *            type: string
- *            description: The auto-generated id by MongoDB
- *          name:
- *            type: string
- *            unique: true
- *          img:
- *            type: string
- *          brand:
- *            type: string
- *          isRented:
- *            type: boolean
- *            default: false
- *          rentedAmount:
- *            type: number
- *            default: 0
- *          price:
- *            type: number
- *          color:
- *            type: string
- *          frameMaterial:
- *            type: string
- *          frameSize:
- *            type: number
- *          wheelsSize:
- *            type: number
- *
- */
 
-/**
- * @swagger
- * tags:
- *   name: BikeRoutes
- *   description: Bike managing API
- */
+
 
 /**
  * @swagger
