@@ -161,9 +161,6 @@ router.post("/add", adminMiddleware, async (req, res) => {
   }
 });
 
-
-
-
 /**
  * @swagger
  * /bike/getAll:
@@ -182,6 +179,60 @@ router.post("/add", adminMiddleware, async (req, res) => {
  *                    type: string
  *        200:
  *           description: Returns a success message about adding new bike
+ *           content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  bikes:
+ *                    type: array
+ *                    items:
+ *                        $ref: '#/components/schemas/Bike'
+ *
+ *
+ *
+ *
+ */
+
+/**
+ * @swagger
+ * /bike/getFiltered:
+ *   get:
+ *     summary: Returns filtered bikes by parameters
+ *     tags: [BikeRoutes]
+ *     parameters:
+ *       - in: query
+ *         name: brand
+ *         schema:
+ *            type: string
+ *         description: The name of brand
+ *       - in: query
+ *         name: wheelsSize
+ *         schema:
+ *            type: number
+ *         description: The size of wheels
+ *       - in: query
+ *         name: frameSize
+ *         schema:
+ *            type: string
+ *         description: The size of frame
+ *       - in: query
+ *         name: isRented
+ *         schema:
+ *            type: boolean
+ *         description: Status of bike(rented or not)
+ *     responses:
+ *        500:
+ *           description: Some server error
+ *           content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *        200:
+ *           description: Returns an array of filtered bikes
  *           content:
  *            application/json:
  *              schema:
@@ -216,6 +267,47 @@ router.get("/getAll", (req, res) => {
     });
     return res.status(200).json({ bikes: result });
   }).lean();
+});
+
+router.get("/getFiltered", async (req, res) => {
+  try {
+    const arr = Object.keys(req.query).filter(
+      (query) => req.query[query].toLowerCase() !== "Все".toLowerCase()
+    );
+    let filtered = [];
+    switch (arr.length) {
+      case 1:
+        filtered = await Bike.find({ [arr[0]]: req.query[arr[0]] });
+        break;
+      case 2:
+        filtered = await Bike.find({
+          [arr[0]]: req.query[arr[0]],
+          [arr[1]]: req.query[arr[1]],
+        });
+        break;
+      case 3:
+        filtered = await Bike.find({
+          [arr[0]]: req.query[arr[0]],
+          [arr[1]]: req.query[arr[1]],
+          [arr[2]]: req.query[arr[2]],
+        });
+        break;
+      case 4:
+        filtered = await Bike.find({
+          [arr[0]]: req.query[arr[0]],
+          [arr[1]]: req.query[arr[1]],
+          [arr[2]]: req.query[arr[2]],
+          [arr[3]]: req.query[arr[3]],
+        });
+        break;
+      default:
+        filtered = await Bike.find({});
+        break;
+    }
+    return res.status(200).json({ filtered });
+  } catch (err) {
+    return res.status(500).json({ message: "Server error" });
+  }
 });
 
 module.exports = router;
