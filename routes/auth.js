@@ -68,11 +68,7 @@ const router = Router();
  *                                          _id:
  *                                            type: string
  *                                            description: The auto-generated id by MongoDB
- *                                          name:
- *                                            type: string
- *                                          brand:
- *                                            type: string
- *                                          bikeType:
+ *                                          bikeId:
  *                                            type: string
  *                                          price:
  *                                            type: string
