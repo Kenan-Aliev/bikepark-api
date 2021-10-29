@@ -214,7 +214,7 @@ router.post("/add", adminMiddleware, async (req, res) => {
  *       - in: query
  *         name: frameSize
  *         schema:
- *            type: string
+ *            type: number
  *         description: The size of frame
  *       - in: query
  *         name: isRented
@@ -277,20 +277,20 @@ router.get("/getFiltered", async (req, res) => {
     let filtered = [];
     switch (arr.length) {
       case 1:
-        filtered = await Bike.find({ [arr[0]]: req.query[arr[0]] });
+        filtered = await Bike.find({ [arr[0]]: req.query[arr[0]] }).lean();
         break;
       case 2:
         filtered = await Bike.find({
           [arr[0]]: req.query[arr[0]],
           [arr[1]]: req.query[arr[1]],
-        });
+        }).lean();
         break;
       case 3:
         filtered = await Bike.find({
           [arr[0]]: req.query[arr[0]],
           [arr[1]]: req.query[arr[1]],
           [arr[2]]: req.query[arr[2]],
-        });
+        }).lean();
         break;
       case 4:
         filtered = await Bike.find({
@@ -298,15 +298,27 @@ router.get("/getFiltered", async (req, res) => {
           [arr[1]]: req.query[arr[1]],
           [arr[2]]: req.query[arr[2]],
           [arr[3]]: req.query[arr[3]],
-        });
+        }).lean();
         break;
       default:
-        filtered = await Bike.find({});
+        filtered = await Bike.find({}).lean();
         break;
     }
+    filtered = filtered.map((bike) => {
+      if (bike.name.includes(" ")) {
+        const bikeName = bike.name
+          .split(" ")
+          .map((word) => word[0].toUpperCase() + word.substr(1))
+          .join(" ");
+        return { ...bike, name: bikeName };
+      } else {
+        const bikeName = bike.name[0].toUpperCase() + bike.name.substr(1);
+        return { ...bike, name: bikeName };
+      }
+    });
     return res.status(200).json({ filtered });
   } catch (err) {
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: messages.server.error });
   }
 });
 
