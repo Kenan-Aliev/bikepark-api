@@ -12,7 +12,6 @@ const orderRoutes = require("./routes/order");
 const filterRoutes = require("./routes/filters");
 const keys = require("./keys/index");
 
-
 const PORT = keys.PORT;
 const dbUrl = keys.DB_URL;
 
@@ -27,6 +26,9 @@ const options = {
     servers: [
       {
         url: `http://localhost:${PORT}`,
+      },
+      {
+        url: "https://intense-beyond-43314.herokuapp.com",
       },
     ],
   },
