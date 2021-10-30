@@ -194,6 +194,30 @@ router.post("/add", adminMiddleware, async (req, res) => {
  *
  */
 
+
+
+router.get("/getAll", (req, res) => {
+  Bike.find({}, (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: messages.server.error, err });
+    }
+    result = result.map((bike) => {
+      if (bike.name.includes(" ")) {
+        const bikeName = bike.name
+          .split(" ")
+          .map((word) => word[0].toUpperCase() + word.substr(1))
+          .join(" ");
+        return { ...bike, name: bikeName };
+      } else {
+        const bikeName = bike.name[0].toUpperCase() + bike.name.substr(1);
+        return { ...bike, name: bikeName };
+      }
+    });
+    return res.status(200).json({ bikes: result });
+  }).lean();
+});
+
+
 /**
  * @swagger
  * /bike/getFiltered:
@@ -248,26 +272,7 @@ router.post("/add", adminMiddleware, async (req, res) => {
  *
  */
 
-router.get("/getAll", (req, res) => {
-  Bike.find({}, (err, result) => {
-    if (err) {
-      return res.status(500).json({ message: messages.server.error, err });
-    }
-    result = result.map((bike) => {
-      if (bike.name.includes(" ")) {
-        const bikeName = bike.name
-          .split(" ")
-          .map((word) => word[0].toUpperCase() + word.substr(1))
-          .join(" ");
-        return { ...bike, name: bikeName };
-      } else {
-        const bikeName = bike.name[0].toUpperCase() + bike.name.substr(1);
-        return { ...bike, name: bikeName };
-      }
-    });
-    return res.status(200).json({ bikes: result });
-  }).lean();
-});
+
 
 router.get("/getFiltered", async (req, res) => {
   try {

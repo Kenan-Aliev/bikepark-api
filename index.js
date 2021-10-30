@@ -10,9 +10,11 @@ const authRoutes = require("./routes/auth");
 const bikeRoutes = require("./routes/bike.js");
 const orderRoutes = require("./routes/order");
 const filterRoutes = require("./routes/filters");
+const keys = require("./keys/index");
 
-const PORT = process.env.PORT || 8080;
-const dbUrl = process.env.DB_URL;
+
+const PORT = keys.PORT;
+const dbUrl = keys.DB_URL;
 
 const options = {
   definition: {

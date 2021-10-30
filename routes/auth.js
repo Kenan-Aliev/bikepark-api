@@ -7,6 +7,7 @@ const User = require("../models/user");
 const regEmail = require("../emails/registration");
 const messages = require("../messages/index");
 const { registerValidators } = require("../utils/validators");
+const keys = require('../keys/index')
 const router = Router();
 
 /**
@@ -154,12 +155,12 @@ const transporter = nodemailer.createTransport(
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
-      user: process.env.EMAIL_FROM,
-      pass: process.env.EMAIL_PASS,
+      user: keys.EMAIL_FROM,
+      pass: keys.EMAIL_PASS,
     },
   },
   {
-    from: `Bike Park <${process.env.EMAIL_FROM}>`,
+    from: `Bike Park <${keys.EMAIL_FROM}>`,
   }
 );
 
@@ -172,7 +173,7 @@ router.post("/registration", registerValidators, async (req, res) => {
     const { email, username, phone, password } = req.body;
     const token = jwt.sign(
       { email, username, phone, password },
-      process.env.SECRET_KEY,
+      keys.SECRET_KEY,
       { expiresIn: "3m" }
     );
     transporter.sendMail(regEmail(email, token), (err, info) => {
@@ -242,7 +243,7 @@ router.post("/registration", registerValidators, async (req, res) => {
 
 router.post("/activation", async (req, res) => {
   const { token } = req.body;
-  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+  jwt.verify(token, keys.SECRET_KEY, (err, decoded) => {
     if (err) {
       if (err.message.includes("jwt expired")) {
         return res
@@ -367,7 +368,7 @@ router.post("/login", async (req, res) => {
             email: candidate.email,
             role: candidate.role,
           },
-          process.env.SECRET_KEY,
+          keys.SECRET_KEY,
           { expiresIn: "24h" }
         );
         return res.status(200).json({

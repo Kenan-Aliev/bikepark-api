@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 const messages = require("../messages/index");
+const keys = require("../keys/index");
 
 module.exports = function (req, res, next) {
   const token = req.headers.authorization.split(" ")[1];
-  jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {
+  jwt.verify(token, keys.SECRET_KEY, (error, decoded) => {
     if (error) {
       if (error.message.includes("jwt expired")) {
         return res
