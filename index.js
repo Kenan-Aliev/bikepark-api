@@ -26,10 +26,7 @@ const options = {
     servers: [
       {
         url: `http://localhost:${PORT}`,
-      },
-      {
-        url: "https://intense-beyond-43314.herokuapp.com",
-      },
+      }
     ],
   },
   apis: ["./routes/*.js"],
