@@ -25,7 +25,7 @@ const options = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}`,
+        url: keys.BASE_URL
       }
     ],
   },

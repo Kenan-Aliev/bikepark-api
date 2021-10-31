@@ -6,4 +6,5 @@ module.exports = {
   EMAIL_FROM: process.env.EMAIL_FROM,
   PORT: process.env.PORT,
   SECRET_KEY: process.env.SECRET_KEY,
+  BASE_URL: process.env.BASE_URL,
 };
