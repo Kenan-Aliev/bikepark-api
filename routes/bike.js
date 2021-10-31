@@ -46,6 +46,17 @@ const messages = require("../messages/index");
 
 /**
  * @swagger
+ *   components:
+ *        securitySchemes:
+ *            bearerAuth:
+ *               type: http
+ *               scheme: bearer
+ *               bearerFormat: JWT 
+ */
+
+
+/**
+ * @swagger
  * tags:
  *   name: BikeRoutes
  *   description: Bike managing API
@@ -57,13 +68,8 @@ const messages = require("../messages/index");
  *   post:
  *     summary: Adding a new bike to data base and returning a message about it
  *     tags: [BikeRoutes]
- *     parameters:
- *       - in: headers
- *         name: Authorization
- *         schema:
- *              type: string
- *              required: true
- *         example: Bearer `${token}`
+ *     security:
+ *      - bearerAuth: []
  *     requestBody:
  *        required: true
  *        content:

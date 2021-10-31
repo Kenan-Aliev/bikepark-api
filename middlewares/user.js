@@ -3,6 +3,7 @@ const messages = require("../messages/index");
 const keys = require("../keys/index");
 
 module.exports = function (req, res, next) {
+  console.log(req.headers)
   const token = req.headers.authorization.split(" ")[1];
   jwt.verify(token, keys.SECRET_KEY, (error, decoded) => {
     if (error) {

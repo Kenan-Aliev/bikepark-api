@@ -8,6 +8,17 @@ const messages = require("../messages/index");
 
 /**
  * @swagger
+ *   components:
+ *        securitySchemes:
+ *            bearerAuth:
+ *               type: http
+ *               scheme: bearer
+ *               bearerFormat: JWT 
+ */
+
+
+/**
+ * @swagger
  * tags:
  *   name: OrderRoutes
  *   description: Orders managing API
@@ -19,13 +30,8 @@ const messages = require("../messages/index");
  *   post:
  *     summary: Returns a message about new success order
  *     tags: [OrderRoutes]
- *     parameters:
- *       - in: headers
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         example: Bearer ${token}
+ *     security:
+ *      - bearerAuth: []
  *     requestBody:
  *        required: true
  *        content:
@@ -177,13 +183,8 @@ router.post("/new", userMiddleware, async (req, res) => {
  *   get:
  *     summary: Returns all orders of user
  *     tags: [OrderRoutes]
- *     parameters:
- *       - in: headers
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         example: Bearer ${token}
+ *     security:
+ *      - bearerAuth: []
  *     responses:
  *        400:
  *           description: Returns a message about invalid token
@@ -275,13 +276,8 @@ router.get("/getUsersOrders", userMiddleware, async (req, res) => {
  *   post:
  *     summary: Returns a message about success extending an order
  *     tags: [OrderRoutes]
- *     parameters:
- *       - in: headers
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         example: Bearer ${token}
+ *     security:
+ *      - bearerAuth: []
  *     requestBody:
  *        required: true
  *        content:
@@ -368,6 +364,8 @@ router.put("/extend", userMiddleware, async (req, res) => {
  *   delete:
  *     summary: Returns a message about canceling an order
  *     tags: [OrderRoutes]
+ *     security:
+ *      - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: orderNumber
@@ -375,12 +373,6 @@ router.put("/extend", userMiddleware, async (req, res) => {
  *         schema:
  *           type: number
  *         description: The order number
- *       - in: headers
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         example: Bearer ${token}
  *     responses:
  *        400:
  *           description: Returns a message about invalid token
