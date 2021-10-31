@@ -7,7 +7,7 @@ const User = require("../models/user");
 const regEmail = require("../emails/registration");
 const messages = require("../messages/index");
 const { registerValidators } = require("../utils/validators");
-const keys = require('../keys/index')
+const keys = require("../keys/index");
 const router = Router();
 
 /**
@@ -54,6 +54,18 @@ const router = Router();
  *                   orderNumber:
  *                      type: number
  *                      description: The auto generated number by server
+ *                   name:
+ *                      type: string
+ *                      description: The name of the customer
+ *                   phone:
+ *                      type: string
+ *                      description: Phone of the customer
+ *                   addressOfClient:
+ *                      type: string
+ *                      description: Where to deliver the bike
+ *                   addressOfAdmin:
+ *                      type: string
+ *                      description: Where to bring back the bike
  *                   totalPrice:
  *                      type: number
  *                      description: Total price of order

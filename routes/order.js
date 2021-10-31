@@ -6,14 +6,12 @@ const Bike = require("../models/bike.js");
 const rand = require("random-key");
 const messages = require("../messages/index");
 
-
 /**
  * @swagger
  * tags:
  *   name: OrderRoutes
  *   description: Orders managing API
  */
-
 
 /**
  * @swagger
@@ -35,6 +33,14 @@ const messages = require("../messages/index");
  *            schema:
  *              type: object
  *              properties:
+ *                name:
+ *                  type: string
+ *                phone:
+ *                  type: string
+ *                addressOfClient:
+ *                  type: string
+ *                addressOfAdmin:
+ *                  type: string
  *                madeAt:
  *                  type: string
  *                  format: date
@@ -49,9 +55,9 @@ const messages = require("../messages/index");
  *                      bikeId:
  *                        type: string
  *                      price:
- *                        type: number  
- *                       
- *                  
+ *                        type: number
+ *
+ *
  *     responses:
  *        400:
  *           description: Returns a message about invalid token or if bike is rented
@@ -94,7 +100,15 @@ const messages = require("../messages/index");
  */
 
 router.post("/new", userMiddleware, async (req, res) => {
-  let { bikes, madeAt, expiresAt } = req.body;
+  let {
+    name,
+    phone,
+    addressOfClient,
+    addressOfAdmin,
+    bikes,
+    madeAt,
+    expiresAt,
+  } = req.body;
   try {
     const user = await User.findOne({ _id: req.user.id });
     for (let i = 0; i < bikes.length; i++) {
@@ -137,6 +151,10 @@ router.post("/new", userMiddleware, async (req, res) => {
     user.orders = [
       ...user.orders,
       {
+        name,
+        phone,
+        addressOfClient,
+        addressOfAdmin,
         bikes,
         orderNumber,
         totalPrice,
@@ -152,7 +170,6 @@ router.post("/new", userMiddleware, async (req, res) => {
     return res.status(500).json({ message: messages.server.error, error });
   }
 });
-
 
 /**
  * @swagger
@@ -228,11 +245,11 @@ router.post("/new", userMiddleware, async (req, res) => {
  *                                type: string
  *                              price:
  *                                type: number
- *                              bikeId: 
+ *                              bikeId:
  *                                type: object
  *                                properties:
- *                                  _id: 
- *                                    type: string 
+ *                                  _id:
+ *                                    type: string
  *                                  name:
  *                                    type: string
  *                                  brand:
@@ -251,8 +268,6 @@ router.get("/getUsersOrders", userMiddleware, async (req, res) => {
     return res.status(500).json({ message: messages.server.error, error });
   }
 });
-
-
 
 /**
  * @swagger
@@ -321,9 +336,6 @@ router.get("/getUsersOrders", userMiddleware, async (req, res) => {
  *
  */
 
-
-
-
 router.put("/extend", userMiddleware, async (req, res) => {
   let { orderNumber, endTime } = req.body;
 
@@ -350,14 +362,12 @@ router.put("/extend", userMiddleware, async (req, res) => {
   }
 });
 
-
-
 /**
  * @swagger
  * /order/cancel/{orderNumber}:
  *   delete:
  *     summary: Returns a message about canceling an order
- *     tags: [OrderRoutes]   
+ *     tags: [OrderRoutes]
  *     parameters:
  *       - in: path
  *         name: orderNumber
@@ -370,7 +380,7 @@ router.put("/extend", userMiddleware, async (req, res) => {
  *         required: true
  *         schema:
  *           type: string
- *         example: Bearer ${token} 
+ *         example: Bearer ${token}
  *     responses:
  *        400:
  *           description: Returns a message about invalid token
@@ -408,7 +418,7 @@ router.put("/extend", userMiddleware, async (req, res) => {
  *                properties:
  *                  message:
  *                    type: string
- *                   
+ *
  */
 
 router.delete("/cancel/:orderNumber", userMiddleware, async (req, res) => {
