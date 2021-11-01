@@ -25,6 +25,7 @@ const bikeSchema = new Schema({
     type: Number,
     required: true,
   },
+  rentedUntil: Date,
   color: String,
   frameMaterial: String,
   frameSize: Number,

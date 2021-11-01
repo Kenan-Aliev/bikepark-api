@@ -33,6 +33,7 @@ const userSchema = new Schema({
       orderNumber: Number,
       phone: String,
       name: String,
+      status: String,
       addressOfClient: String,
       addressOfAdmin: String,
       totalPrice: Number,
