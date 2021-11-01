@@ -7,8 +7,6 @@ const rand = require("random-key");
 const messages = require("../messages/index");
 const keys = require("../keys/index");
 
-
-
 router.post("/new", userMiddleware, async (req, res) => {
   let {
     name,
@@ -32,6 +30,7 @@ router.post("/new", userMiddleware, async (req, res) => {
               });
               if (previousCandidate) {
                 previousCandidate.isRented = false;
+                previousCandidate.rentedUntil = undefined;
                 previousCandidate.rentedAmount -= 1;
                 await previousCandidate.save();
               } else {
@@ -83,7 +82,6 @@ router.post("/new", userMiddleware, async (req, res) => {
   }
 });
 
-
 router.get("/getUsersOrders", userMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({
@@ -97,7 +95,7 @@ router.get("/getUsersOrders", userMiddleware, async (req, res) => {
       }
     }
     await user.save();
-    res.redirect(`${keys.BASE_URL}/getUsersOrders/${req.user.id}`);
+    return res.redirect(`${keys.BASE_URL}/getUsersOrders/${req.user.id}`);
   } catch (error) {
     return res.status(500).json({ message: messages.server.error, error });
   }
@@ -116,8 +114,6 @@ router.get("/getUsersOrders/:userId", async (req, res) => {
     return res.status(500).json({ message: messages.server.error, err });
   }
 });
-
-
 
 router.put("/extend", userMiddleware, async (req, res) => {
   let { orderNumber, endTime } = req.body;
@@ -152,8 +148,6 @@ router.put("/extend", userMiddleware, async (req, res) => {
   }
 });
 
-
-
 router.delete("/cancel/:orderNumber", userMiddleware, async (req, res) => {
   const { orderNumber } = req.params;
   try {
@@ -162,10 +156,12 @@ router.delete("/cancel/:orderNumber", userMiddleware, async (req, res) => {
     for (let i = 0; i < user.orders[orderIdx].bikes.length; i++) {
       const bikeId = user.orders[orderIdx].bikes[i].bikeId;
       const bike = await Bike.findOne({ _id: bikeId });
-      bike.rentedUntil = "";
+      bike.rentedUntil = undefined;
       bike.isRented = false;
       await bike.save();
     }
+    user.orders[orderIdx].status = "Завершен";
+    await user.save();
     return res.status(200).json({ message: messages.order.cancel.success });
   } catch (error) {
     console.log(error);
