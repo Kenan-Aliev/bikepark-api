@@ -6,6 +6,7 @@ const Bike = require("../models/bike.js");
 const rand = require("random-key");
 const messages = require("../messages/index");
 const keys = require("../keys/index");
+const orderMiddleware = require("../middlewares/order");
 
 router.post("/new", userMiddleware, async (req, res) => {
   let {
@@ -82,38 +83,30 @@ router.post("/new", userMiddleware, async (req, res) => {
   }
 });
 
-router.get("/getUsersOrders", userMiddleware, async (req, res) => {
-  try {
-    const user = await User.findOne({
-      _id: req.user.id,
-    });
-    for (let i = 0; i < user.orders.length; i++) {
-      if (user.orders[i].expiresAt.getTime() < new Date().getTime()) {
-        user.orders[i].status = "Завершен";
-      } else {
-        continue;
-      }
-    }
-    await user.save();
-    return res.redirect(`${keys.BASE_URL}/getUsersOrders/${req.user.id}`);
-  } catch (error) {
-    return res.status(500).json({ message: messages.server.error, error });
-  }
-});
+router.get(
+  "/getUsersOrders",
+  userMiddleware,
+  orderMiddleware,
+  async (req, res) => {
+    try {
+      const user = await User.findOne({ _id: req.user.id })
+        .populate("orders.bikes.bikeId", "name brand")
+        .lean();
+      const { orders } = user;
+      const currentOrders = orders.filter((order) => {
+        return order.status?.toLowerCase() === "Выполняется".toLowerCase();
+      });
 
-router.get("/getUsersOrders/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const user = await User.findOne({ _id: userId }).populate(
-      "orders.bikes.bikeId",
-      "name brand"
-    );
-    const { orders } = user;
-    return res.status(200).send({ userOrders: orders });
-  } catch (err) {
-    return res.status(500).json({ message: messages.server.error, err });
+      const completedOrders = orders.filter((order) => {
+        return order.status?.toLowerCase() === "Завершен".toLowerCase();
+      });
+      return res.status(200).send({ currentOrders, completedOrders });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: messages.server.error, err });
+    }
   }
-});
+);
 
 router.put("/extend", userMiddleware, async (req, res) => {
   let { orderNumber, endTime } = req.body;

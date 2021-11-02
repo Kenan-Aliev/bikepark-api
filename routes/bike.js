@@ -3,8 +3,7 @@ const router = Router();
 const Bike = require("../models/bike");
 const adminMiddleware = require("../middlewares/admin");
 const messages = require("../messages/index");
-
-
+const bikeMiddleware = require("../middlewares/bike");
 
 router.post("/add", adminMiddleware, async (req, res) => {
   const {
@@ -39,10 +38,7 @@ router.post("/add", adminMiddleware, async (req, res) => {
   }
 });
 
-
-
-
-router.get("/getAll", (req, res) => {
+router.get("/getAll", bikeMiddleware, (req, res) => {
   Bike.find({}, (err, result) => {
     if (err) {
       return res.status(500).json({ message: messages.server.error, err });
@@ -62,10 +58,6 @@ router.get("/getAll", (req, res) => {
     return res.status(200).json({ bikes: result });
   }).lean();
 });
-
-
-
-
 
 router.get("/getFiltered", async (req, res) => {
   try {

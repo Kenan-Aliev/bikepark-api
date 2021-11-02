@@ -106,7 +106,7 @@
  * @swagger
  * /order/getUsersOrders:
  *   get:
- *     summary: Returns all orders of user
+ *     summary: Returns current and completed orders of user
  *     tags: [OrderRoutes]
  *     security:
  *      - bearerAuth: []
@@ -145,7 +145,43 @@
  *              schema:
  *                type: object
  *                properties:
- *                  userOrders:
+ *                  currentOrders:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        _id:
+ *                          type: string
+ *                        orderNumber:
+ *                          type: number
+ *                        totalPrice:
+ *                          type: number
+ *                        madeAt:
+ *                          type: string
+ *                          format: date
+ *                        expiresAt:
+ *                          type: string
+ *                          format: date
+ *                        bikes:
+ *                          type: array
+ *                          items:
+ *                            type: object
+ *                            properties:
+ *                              _id:
+ *                                type: string
+ *                              price:
+ *                                type: number
+ *                              bikeId:
+ *                                type: object
+ *                                properties:
+ *                                  _id:
+ *                                    type: string
+ *                                  name:
+ *                                    type: string
+ *                                  brand:
+ *                                    type: string
+ * 
+ *                  completedOrders:
  *                    type: array
  *                    items:
  *                      type: object
