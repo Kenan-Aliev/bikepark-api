@@ -19,6 +19,10 @@ router.post("/new", userMiddleware, async (req, res) => {
     madeAt,
     expiresAt,
   } = req.body;
+  madeAt = new Date(madeAt);
+  madeAt.setHours(madeAt.getHours() + 6);
+  expiresAt = new Date(expiresAt);
+  expiresAt.setHours(expiresAt.getHours() + 6);
   try {
     const user = await User.findOne({ _id: req.user.id });
     for (let i = 0; i < bikes.length; i++) {
@@ -58,8 +62,6 @@ router.post("/new", userMiddleware, async (req, res) => {
       return acc + rec.price;
     }, 0);
     const orderNumber = rand.generateDigits(8);
-    madeAt = new Date(madeAt).toISOString();
-    expiresAt = new Date(expiresAt).toISOString();
     user.orders = [
       ...user.orders,
       {
@@ -112,7 +114,8 @@ router.get(
 
 router.put("/extend", userMiddleware, async (req, res) => {
   let { orderNumber, endTime } = req.body;
-
+  endTime = new Date(endTime);
+  endTime.setHours(endTime.getHours() + 6);
   try {
     const user = await User.findOne({ _id: req.user.id });
     const idx = user.orders.findIndex(
@@ -126,10 +129,9 @@ router.put("/extend", userMiddleware, async (req, res) => {
         bike.rentedUntil = endTime;
         await bike.save();
       }
-      endTime = new Date(endTime);
       const expiresDate = new Date(user.orders[idx].expiresAt);
       const diff = endTime.getHours() - expiresDate.getHours();
-      user.orders[idx].expiresAt = endTime.toISOString();
+      user.orders[idx].expiresAt = endTime;
       await user.save();
       return res
         .status(200)
