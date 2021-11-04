@@ -224,7 +224,7 @@
 /**
  * @swagger
  * /order/extend:
- *   post:
+ *   put:
  *     summary: Returns a message about success extending an order
  *     tags: [OrderRoutes]
  *     security:
