@@ -4,6 +4,7 @@ const Bike = require("../models/bike");
 const adminMiddleware = require("../middlewares/admin");
 const messages = require("../messages/index");
 const bikeMiddleware = require("../middlewares/bike");
+const normalizeBikeName = require("../utils//normalizeBikeName");
 
 router.post("/add", adminMiddleware, async (req, res) => {
   const {
@@ -43,18 +44,7 @@ router.get("/getAll", bikeMiddleware, (req, res) => {
     if (err) {
       return res.status(500).json({ message: messages.server.error, err });
     }
-    result = result.map((bike) => {
-      if (bike.name.includes(" ")) {
-        const bikeName = bike.name
-          .split(" ")
-          .map((word) => word[0].toUpperCase() + word.substr(1))
-          .join(" ");
-        return { ...bike, name: bikeName };
-      } else {
-        const bikeName = bike.name[0].toUpperCase() + bike.name.substr(1);
-        return { ...bike, name: bikeName };
-      }
-    });
+    result = normalizeBikeName(result, "bike");
     return res.status(200).json({ bikes: result });
   }).lean();
 });
@@ -94,18 +84,7 @@ router.get("/getFiltered", async (req, res) => {
         filtered = await Bike.find({}).lean();
         break;
     }
-    filtered = filtered.map((bike) => {
-      if (bike.name.includes(" ")) {
-        const bikeName = bike.name
-          .split(" ")
-          .map((word) => word[0].toUpperCase() + word.substr(1))
-          .join(" ");
-        return { ...bike, name: bikeName };
-      } else {
-        const bikeName = bike.name[0].toUpperCase() + bike.name.substr(1);
-        return { ...bike, name: bikeName };
-      }
-    });
+    filtered = normalizeBikeName(filtered, "bike");
     return res.status(200).json({ filtered });
   } catch (err) {
     return res.status(500).json({ message: messages.server.error });

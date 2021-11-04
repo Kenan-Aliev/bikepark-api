@@ -7,6 +7,7 @@ const rand = require("random-key");
 const messages = require("../messages/index");
 const keys = require("../keys/index");
 const orderMiddleware = require("../middlewares/order");
+const normalizeBikeName = require("../utils//normalizeBikeName");
 
 router.post("/new", userMiddleware, async (req, res) => {
   let {
@@ -92,7 +93,8 @@ router.get(
       const user = await User.findOne({ _id: req.user.id })
         .populate("orders.bikes.bikeId", "name brand")
         .lean();
-      const { orders } = user;
+      let { orders } = user;
+      orders = normalizeBikeName(orders, "order");
       const currentOrders = orders.filter((order) => {
         return order.status?.toLowerCase() === "Выполняется".toLowerCase();
       });
