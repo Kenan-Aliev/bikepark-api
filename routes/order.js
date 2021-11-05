@@ -21,6 +21,7 @@ router.post("/new", userMiddleware, async (req, res) => {
   } = req.body;
   madeAt = new Date(madeAt).toISOString();
   expiresAt = new Date(expiresAt).toISOString();
+  console.log(madeAt, expiresAt);
   try {
     const user = await User.findOne({ _id: req.user.id });
     for (let i = 0; i < bikes.length; i++) {
