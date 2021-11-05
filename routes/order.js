@@ -19,10 +19,6 @@ router.post("/new", userMiddleware, async (req, res) => {
     madeAt,
     expiresAt,
   } = req.body;
-  madeAt = new Date(madeAt);
-  madeAt.setHours(madeAt.getHours() + 6);
-  expiresAt = new Date(expiresAt);
-  expiresAt.setHours(expiresAt.getHours() + 6);
   try {
     const user = await User.findOne({ _id: req.user.id });
     for (let i = 0; i < bikes.length; i++) {
@@ -115,7 +111,6 @@ router.get(
 router.put("/extend", userMiddleware, async (req, res) => {
   let { orderNumber, endTime } = req.body;
   endTime = new Date(endTime);
-  endTime.setHours(endTime.getHours() + 6);
   try {
     const user = await User.findOne({ _id: req.user.id });
     const idx = user.orders.findIndex(
