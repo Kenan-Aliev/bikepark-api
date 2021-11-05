@@ -153,7 +153,7 @@ router.delete("/cancel/:orderNumber", userMiddleware, async (req, res) => {
       bike.isRented = false;
       await bike.save();
     }
-    user.orders[orderIdx].status = "Завершен";
+    user.orders[orderIdx].status = "Отменен";
     await user.save();
     return res.status(200).json({ message: messages.order.cancel.success });
   } catch (error) {
