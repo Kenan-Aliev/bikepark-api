@@ -12,7 +12,6 @@ const orderRoutes = require("./routes/order");
 const filterRoutes = require("./routes/filters");
 const keys = require("./keys/index");
 
-
 const PORT = keys.PORT;
 const dbUrl = keys.DB_URL;
 
@@ -26,8 +25,8 @@ const options = {
     },
     servers: [
       {
-        url: keys.BASE_URL
-      }
+        url: keys.BASE_URL,
+      },
     ],
   },
   apis: ["./swagger/*.js"],

@@ -19,6 +19,8 @@ router.post("/new", userMiddleware, async (req, res) => {
     madeAt,
     expiresAt,
   } = req.body;
+  madeAt = new Date(madeAt).toISOString();
+  expiresAt = new Date(expiresAt).toISOString();
   try {
     const user = await User.findOne({ _id: req.user.id });
     for (let i = 0; i < bikes.length; i++) {
@@ -53,7 +55,6 @@ router.post("/new", userMiddleware, async (req, res) => {
         continue;
       }
     }
-
     const totalPrice = bikes.reduce((acc, rec) => {
       return acc + rec.price;
     }, 0);
@@ -121,12 +122,12 @@ router.put("/extend", userMiddleware, async (req, res) => {
         const bike = await Bike.findOne({
           _id: user.orders[idx].bikes[i].bikeId,
         });
-        bike.rentedUntil = endTime;
+        bike.rentedUntil = endTime.toISOString();
         await bike.save();
       }
       const expiresDate = new Date(user.orders[idx].expiresAt);
       const diff = endTime.getHours() - expiresDate.getHours();
-      user.orders[idx].expiresAt = endTime;
+      user.orders[idx].expiresAt = endTime.toISOString();
       await user.save();
       return res
         .status(200)
