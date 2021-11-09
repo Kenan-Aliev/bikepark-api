@@ -19,6 +19,10 @@ const userSchema = new Schema({
     type: String,
     default: "user",
   },
+  isOnline: {
+    type: Boolean,
+    default: false,
+  },
   orders: [
     {
       bikes: [

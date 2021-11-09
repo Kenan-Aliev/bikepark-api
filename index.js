@@ -12,6 +12,13 @@ const orderRoutes = require("./routes/order");
 const filterRoutes = require("./routes/filters");
 const keys = require("./keys/index");
 
+const server = express();
+const expressWs = require("express-ws")(server);
+const awss = expressWs.getWss();
+const chatFunction = require("./chat/index");
+
+server.ws("/chat", chatFunction(awss));
+
 const PORT = keys.PORT;
 const dbUrl = keys.DB_URL;
 
@@ -33,8 +40,6 @@ const options = {
 };
 
 const specs = swaggerJsDoc(options);
-
-const server = express();
 
 server.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 server.use(cors());
