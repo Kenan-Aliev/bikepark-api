@@ -10,12 +10,11 @@ const { registerValidators } = require("../utils/validators");
 const keys = require("../keys/index");
 const router = Router();
 
-
 const transporter = nodemailer.createTransport(
   {
-    host: "smtp.mail.ru",
-    port: 465,
-    secure: true, // true for 465, false for other ports
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
       user: keys.EMAIL_FROM,
       pass: keys.EMAIL_PASS,
@@ -55,8 +54,6 @@ router.post("/registration", registerValidators, async (req, res) => {
     return res.status(500).json({ message: messages.server.error, error });
   }
 });
-
-
 
 router.post("/activation", async (req, res) => {
   const { token } = req.body;
@@ -104,8 +101,6 @@ router.post("/activation", async (req, res) => {
     }
   });
 });
-
-
 
 router.post("/login", async (req, res) => {
   try {
